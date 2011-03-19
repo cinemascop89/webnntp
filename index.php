@@ -6,9 +6,21 @@
 	
 	include 'header.php';
 	
-	$news = new NNTP("news.fing.edu.uy");
 	
-	if (!$news->authenticate("4942356", "K60359c")){
+	
+	if (!$_SESSION['user']){
+		include('login_form.php');
+		include('footer.php');
+		exit()
+	}elseif ($_POST['user']){
+		$_SESSION['user'] = $_POST['user'];
+		$_SESSION['pass'] = $_POST['pass'];
+		$_SESSION['server'] = $_POST['server'];
+	}
+	
+	$news = new NNTP($_SESSION['server']);
+	
+	if (!$news->authenticate($_SESSION['user'], $_SESSION['pass'])){
 		echo 'error';
 	}
 	/*$groups = $news->get_groups();

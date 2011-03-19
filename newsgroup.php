@@ -82,7 +82,15 @@
 			return $this->get_message_info($match[1]);
 			
 		}
-		public function load_message($message_id){
+		public function load_messages(){
+			
+			$this->send_command("LISTGROUP");
+			$i = 0;
+			$messages = Array();
+			while (($msg_id = $this->read_line()) != "."){
+				$messages[$i] = $this->get_message_info($msg_id);
+				$i++;
+			}
 			
 		}
 	}

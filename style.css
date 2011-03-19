@@ -1,0 +1,26 @@
+body, div, td, hr, li, input, select {
+	font-family: 'Courier New', 'Courier';
+	font-size: 12px;
+	line-height: 1.2em;
+}
+#messages{
+	height:300px;
+	overflow:scroll;
+}
+#post{
+	background-color:#eeeeee;
+}
+
+#login{
+	width:300px;
+	margin:auto;
+}
+#login_form{
+	Font-family:inherit;
+	
+}
+input{
+	width:280px;
+	height:50px;
+	border-style:none;
+}
