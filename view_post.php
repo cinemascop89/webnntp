@@ -1,11 +1,13 @@
 <?php
 
+	session_start();
+
 	include_once 'nntp.php';
 	
 	//include 'header.php';
 	
-	$news = new NNTP($NEWS_HOST);
-	if (!$news->authenticate("4942356", "K60359c")){
+	$news = new NNTP($_SESSION['server']);
+	if (!$news->authenticate($_SESSION['user'], $_SESSION['pass'])){
 		echo 'error';
 		exit();
 	}

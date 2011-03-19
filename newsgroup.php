@@ -62,6 +62,7 @@
 		public function get_message_body($message_id) {
 			
 			$this->send_command("BODY", $message_id);
+			$this->read_line();
 			
 			$body = '';
 			while (($line = $this->read_line()) != '.'){
@@ -92,6 +93,7 @@
 				$i++;
 			}
 			
+			return $messages;
 		}
 	}
 ?>

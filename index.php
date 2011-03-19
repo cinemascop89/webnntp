@@ -1,21 +1,22 @@
-<?php
+<?php 
+	
+	include 'header.php';
+	 
 	session_start();
 	
 	include_once 'nntp.php';
 	include_once 'newsgroup.php';	
 	
-	include 'header.php';
 	
 	
-	
-	if (!$_SESSION['user']){
-		include('login_form.php');
-		include('footer.php');
-		exit()
-	}elseif ($_POST['user']){
+	if (isset($_POST['user'])){
 		$_SESSION['user'] = $_POST['user'];
 		$_SESSION['pass'] = $_POST['pass'];
 		$_SESSION['server'] = $_POST['server'];
+	}elseif (!isset($_SESSION['user'])){
+		include('login_form.php');
+		include('footer.php');
+		exit();
 	}
 	
 	$news = new NNTP($_SESSION['server']);
@@ -23,24 +24,31 @@
 	if (!$news->authenticate($_SESSION['user'], $_SESSION['pass'])){
 		echo 'error';
 	}
-	/*$groups = $news->get_groups();
-	
-	echo "<table>";
-	foreach ($groups as $group) {
-		echo "<tr><td>".$group['name']."</td></tr>\n";
-	}
-	echo "</table>";*/
+?>
+	<div id='groups'>
+<?php
+	$groups = $news->get_groups();
+	foreach ($group as $groups){
+		echo "<a href='/?gid=".$group['name']."'>".$group['name']."(".$group['count'].")</a><br>";
+	} 
+?>
+</div>
+<?php 
 	$group_name = $_GET['gid'];
-	$grupo = $news->open_group($group_name);
+	if ($group_name){
+		$grupo = $news->open_group($group_name);
 	
-	echo "<div id='messages'><table>";
-	for ($i=$grupo->get_first_message(); $i<$grupo->get_last_message(); $i++){
-		$msg = $grupo->get_next_message_info();
-		echo '<tr><td>'.$msg['From']."</td>
-			  <td><a href='#' onClick=\"load_post('$group_name','".$msg['post-id']."');\">".$msg['Subject']."</a></td>
-			  <td>".$msg['Date']."</td></tr>\n";
+		echo "<div id='messages'><table>";
+		
+		$messages = $grupo->load_messages();
+		foreach ($messages as $msg){
+			//$msg = $grupo->get_next_message_info();
+			echo '<tr><td>'.$msg['From']."</td>
+				  <td><a href='#' onClick=\"load_post('$group_name','".$msg['post-id']."');\">".$msg['Subject']."</a></td>
+				  <td>".$msg['Date']."</td></tr>\n";
+		}
+		echo '</table></div>';
 	}
-	echo '</table></div>';
 ?>
 	<div id='post'>
 	</div>

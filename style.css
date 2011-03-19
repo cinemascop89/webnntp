@@ -24,3 +24,9 @@ input{
 	height:50px;
 	border-style:none;
 }
+
+#groups{
+	width:150px;
+	float:left;
+	display:inline;
+}
