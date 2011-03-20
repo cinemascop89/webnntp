@@ -86,6 +86,8 @@
 		public function load_messages(){
 			
 			$this->send_command("LISTGROUP");
+			$this->read_line();
+			
 			$i = 0;
 			$messages = Array();
 			while (($msg_id = $this->read_line()) != "."){

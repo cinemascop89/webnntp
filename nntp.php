@@ -56,9 +56,10 @@
 			
 			while (($line =$this->read_line()) != "."){
 				$regs = Array();
-				preg_match("/(\S+)\s(\d+)\s(\d+)\s(\d+)/", $line, $regs);
+				preg_match("/(\S+)\s(\d+)\s(\d+)\s(\w+)/", $line, $regs);
+				//echo "$line<br>";
 				if ($regs){
-					$groups[$i] = Array("name" => $regs[1], "count" => $regs[2], "high" => $regs[3], "low" => $regs[4]);
+					$groups[$i] = Array("name" => $regs[1], "high" => $regs[2], "low" => $regs[3], "flags" => $regs[4]);
 					$i++;
 				}
 			}

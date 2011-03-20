@@ -4,7 +4,6 @@
 
 	include_once 'nntp.php';
 	
-	//include 'header.php';
 	
 	$news = new NNTP($_SESSION['server']);
 	if (!$news->authenticate($_SESSION['user'], $_SESSION['pass'])){
@@ -23,6 +22,5 @@
 	
 	echo $grupo->get_message_body($_GET['pid']);
 	
-	//include 'footer.php';
 	
 ?>

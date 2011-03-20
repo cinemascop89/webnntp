@@ -1,8 +1,9 @@
 <?php 
-	
-	include 'header.php';
-	 
+
 	session_start();
+
+	include 'template/header.php';
+	 
 	
 	include_once 'nntp.php';
 	include_once 'newsgroup.php';	
@@ -14,8 +15,8 @@
 		$_SESSION['pass'] = $_POST['pass'];
 		$_SESSION['server'] = $_POST['server'];
 	}elseif (!isset($_SESSION['user'])){
-		include('login_form.php');
-		include('footer.php');
+		include('template/login_form.php');
+		include('template/footer.php');
 		exit();
 	}
 	
@@ -27,15 +28,17 @@
 ?>
 	<div id='groups'>
 <?php
-	$groups = $news->get_groups();
-	foreach ($group as $groups){
-		echo "<a href='/?gid=".$group['name']."'>".$group['name']."(".$group['count'].")</a><br>";
-	} 
+	$group_name = $_GET['gid'];
+	if (!$group_name){
+		$groups = $news->get_groups();
+		foreach ($groups as $group)
+			echo "<a href='/?gid=".$group['name']."'>".$group['name']."</a><br>";
+			
+	}else{
 ?>
 </div>
 <?php 
-	$group_name = $_GET['gid'];
-	if ($group_name){
+	
 		$grupo = $news->open_group($group_name);
 	
 		echo "<div id='messages'><table>";
@@ -71,5 +74,5 @@
 	
 	$news->quit();
 	
-	include 'footer.php';
+	include 'template/footer.php';
 ?>
