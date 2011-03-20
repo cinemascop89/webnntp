@@ -26,7 +26,11 @@ input{
 }
 
 #groups{
-	width:150px;
+	width:100px;
+	height:auto;
+	overflow:scroll;
 	float:left;
 	display:inline;
+	margin:10px;
+	background-color:#eeeeee;
 }

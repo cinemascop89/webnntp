@@ -2,6 +2,7 @@
 
 	include_once 'newsgroup.php';
 	include_once 'connection.php';
+	include_once 'db.php';
 	
 	$NEWS_HOST = "news.fing.edu.uy";
 
@@ -11,6 +12,7 @@
 		
 		private $last_message;
 		private $groups, $group_list;
+		private $db;
 		
 
 		public function NNTP ($host, $port=119){
@@ -24,6 +26,8 @@
 				return null;
 				
 			$this->last_message = $this->read_line();
+			
+			$this->db = new DataBase();
 		}
 		
 		
@@ -50,7 +54,8 @@
 			
 			$groups = Array();
 			$i = 0;
-			$this->send_command("LIST");
+			
+			$this->send_command("NEWGROUPS", "110220", "000000");
 			
 			$this->read_line();
 			
@@ -59,10 +64,17 @@
 				preg_match("/(\S+)\s(\d+)\s(\d+)\s(\w+)/", $line, $regs);
 				//echo "$line<br>";
 				if ($regs){
+					$this->db->query("INSERT INTO groups (name, high, low, flags) VALUES ('$regs[1]', $regs[2], $regs[3], '$regs[4]')");
 					$groups[$i] = Array("name" => $regs[1], "high" => $regs[2], "low" => $regs[3], "flags" => $regs[4]);
 					$i++;
 				}
 			}
+			
+			$query=$this->db->query("SELECT name FROM groups");
+			while ($groups[$i] = mysql_fetch_array($query)){
+				$i++;
+			}
+			
 			$this->group_list = $groups;
 			return $groups;
 		}
