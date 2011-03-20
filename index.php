@@ -6,7 +6,8 @@
 	 
 	
 	include_once 'nntp.php';
-	include_once 'newsgroup.php';	
+	include_once 'newsgroup.php';
+	include_once 'util.php';	
 	
 	
 	
@@ -43,13 +44,20 @@
 	
 		echo "<div id='messages'><table>";
 		
-		$messages = $grupo->load_messages();
-		foreach ($messages as $msg){
-			//$msg = $grupo->get_next_message_info();
+		
+		for ($i=$grupo->get_first_message(); $i<$grupo->get_last_message(); $i++)
+    		$msg[] = $grupo->get_next_message_info();
+    		
+    	echo render_posts(organize_posts($msg));
+
+		//$messages = $grupo->load_messages();
+		/*foreach ($messages as $msg){
+			$msg = $grupo->get_next_message_info();
 			echo '<tr><td>'.$msg['From']."</td>
 				  <td><a href='#' onClick=\"load_post('$group_name','".$msg['post-id']."');\">".$msg['Subject']."</a></td>
 				  <td>".$msg['Date']."</td></tr>\n";
-		}
+		*/
+		
 		echo '</table></div>';
 	}
 ?>

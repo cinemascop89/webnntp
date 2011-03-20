@@ -81,6 +81,7 @@
 		 * @uses lastfmApiDatabase_result
 		 */
 		public function query($sql) {
+
 			if ( !$queryResource = mysql_query($sql, $this->dbConn) ) {
 				echo mysql_error();
 				$this->handleError();

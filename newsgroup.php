@@ -2,12 +2,13 @@
 
 	include_once 'nntp.php';
 	include_once 'connection.php';
+	include_once 'db.php';
 	
 	class Newsgroup extends SocketConnection{
 		
 		private $name, $unread, $messages, $first, $last;
 		
-		private $news;
+		private $news, $db;
 		
 		public function Newsgroup($name, $sock){
 			
@@ -27,6 +28,8 @@
 			}else{
 				return null;
 			}
+			
+			$this->db = new DataBase();
 			
 		}
 		
@@ -55,6 +58,8 @@
 				$msg_data[$matches[1]] = $matches[2];
 			}
 			$msg_data['post-id'] = $message_id;
+			$msg_data['group'] = $this->name;
+			$this->db->query("INSERT INTO posts (`group`, `From`, `Subject`, `Date`) VALUES ('$this->name', '".$msg_data['From']."', '".$msg_data['Subject']."', '".$msg_data['Date']."')");
 			
 			return $msg_data;
 		}
@@ -86,14 +91,20 @@
 		public function load_messages(){
 			
 			$this->send_command("LISTGROUP");
-			$this->read_line();
+			preg_match("/(\d+)\s(\d+)\s\d+\s\d+\s\S+/", $this->read_line(), $regs);
 			
-			$i = 0;
 			$messages = Array();
-			while (($msg_id = $this->read_line()) != "."){
-				$messages[$i] = $this->get_message_info($msg_id);
-				$i++;
+			if (intval($regs[1]) < 300 && intval($regs[2]) != 0){
+				$i = 0;
+				while (($msg_id = $this->read_line()) != "."){
+					$messages[$i] = $this->get_message_info($msg_id);
+					$i++;
+				}
 			}
+			
+			$query = $this->db->query("SELECT group, From, Subject, Date FROM posts WHERE group='$this->name'");
+			while ($post = mysql_fetch_array($query))
+				$messages[] = $post;
 			
 			return $messages;
 		}
