@@ -59,7 +59,7 @@
 			}
 			$msg_data['post-id'] = $message_id;
 			$msg_data['group'] = $this->name;
-			$this->db->query("INSERT INTO posts (`group`, `From`, `Subject`, `Date`) VALUES ('$this->name', '".$msg_data['From']."', '".$msg_data['Subject']."', '".$msg_data['Date']."')");
+			//$this->db->query("INSERT INTO posts (`group`, `From`, `Subject`, `Date`) VALUES ('$this->name', '".$msg_data['From']."', '".$msg_data['Subject']."', '".$msg_data['Date']."')");
 			
 			return $msg_data;
 		}

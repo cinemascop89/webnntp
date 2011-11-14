@@ -11,11 +11,7 @@
 			$this->port = $port;
 			
 			$this->sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-			if(socket_connect($this->sock, $this->host, $this->port))
-				return true;
-			else
-				return true;
-			
+			return socket_connect($this->sock, $this->host, $this->port);			
 						
 		}
 		

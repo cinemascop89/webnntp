@@ -1,8 +1,16 @@
 <?php
 
-	session_start();
+	ini_set("display_errors","1");
+	
+	//session_start();
 
 	include_once 'nntp.php';
+	include_once 'models/message.php';
+	
+	$message = new Message();
+	$message->from = "example@example.com";
+	$message->save();
+	exit;
 	
 	
 	$news = new NNTP($_SESSION['server']);
