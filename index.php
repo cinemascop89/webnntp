@@ -5,8 +5,8 @@
 	include 'template/header.php';
 	 
 	
-	include_once 'nntp.php';
-	include_once 'newsgroup.php';
+	include_once 'nntp/nntp.php';
+	include_once 'nntp/newsgroup.php';
 	include_once 'util.php';	
 	
 	
@@ -15,55 +15,51 @@
 		$_SESSION['user'] = $_POST['user'];
 		$_SESSION['pass'] = $_POST['pass'];
 		$_SESSION['server'] = $_POST['server'];
-	}elseif (!isset($_SESSION['user'])){
+	}elseif (!isset($_SESSION['server'])){
 		include('template/login_form.php');
 		include('template/footer.php');
+		
 		exit();
 	}
 	
-	$news = new NNTP($_SESSION['server']);
+	$news = new NetNews($_SESSION['server']);
 	
-	if (!$news->authenticate($_SESSION['user'], $_SESSION['pass'])){
+	if ($_SESSION['user'] != '' && !$news->authenticate($_SESSION['user'], $_SESSION['pass'])){
 		echo 'error';
 	}
+	
+	//$news->capabilities();
 ?>
 	<div id='groups'>
 <?php
+	
+	$groups = $news->get_groups();
+	foreach ($groups as $group)
+		echo "<a href='/?gid=".$group->get_name()."'>".$group->get_name()."</a><br>";
+
 	$group_name = $_GET['gid'];
-	if (!$group_name){
-		$groups = $news->get_groups();
-		foreach ($groups as $group)
-			echo "<a href='/?gid=".$group['name']."'>".$group['name']."</a><br>";
-			
-	}else{
+	if ($group_name){
 ?>
 </div>
+	<div id='viewer'>
+		<div id='messages'>
+			<table>
 <?php 
 	
-		$grupo = $news->open_group($group_name);
+		$group = $news->open_group($group_name);
 	
-		echo "<div id='messages'><table>";
-		
-		
-		for ($i=$grupo->get_first_message(); $i<$grupo->get_last_message(); $i++)
-    		$msg[] = $grupo->get_next_message_info();
-    		
-    	echo render_posts(organize_posts($msg));
+    	//echo render_posts(organize_posts($group->load_messages()));
+    	$articles = $group->load_messages();
+    	print_r (organize_posts($aticles));
+    	echo render_posts($articles);
 
-		//$messages = $grupo->load_messages();
-		/*foreach ($messages as $msg){
-			$msg = $grupo->get_next_message_info();
-			echo '<tr><td>'.$msg['From']."</td>
-				  <td><a href='#' onClick=\"load_post('$group_name','".$msg['post-id']."');\">".$msg['Subject']."</a></td>
-				  <td>".$msg['Date']."</td></tr>\n";
-		*/
-		
-		echo '</table></div>';
 	}
 ?>
-	<div id='post'>
+			</table>
+		</div>
+		<div id='post'>
+		</div>
 	</div>
-	
 	<script type="text/javascript">
 //<!--
 	function load_post(group, post){
@@ -71,7 +67,7 @@
 		   type: "GET",
 		   url: "/view_post.php?gid="+group+"&pid="+post,
 		   success: function(msg){
-		     $("#post").html(msg);
+			  $("#post").html(msg);
 		   }
 		 });
 		 return false;
@@ -80,7 +76,7 @@
 </script>
 <?php 
 	
-	$news->quit();
+	$news->disconnect();
 	
 	include 'template/footer.php';
 ?>

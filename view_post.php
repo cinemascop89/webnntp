@@ -2,33 +2,31 @@
 
 	ini_set("display_errors","1");
 	
-	//session_start();
+	session_start();
 
-	include_once 'nntp.php';
-	include_once 'models/message.php';
+	include_once 'nntp/netnews.php';
+	include_once 'util.php';
 	
-	$message = new Message();
-	$message->from = "example@example.com";
-	$message->save();
-	exit;
-	
-	
-	$news = new NNTP($_SESSION['server']);
-	if (!$news->authenticate($_SESSION['user'], $_SESSION['pass'])){
-		echo 'error';
+	$news = new NetNews($_SESSION['server']);
+	if ($_SESSION['user'] != '' && !$news->authenticate($_SESSION['user'], $_SESSION['pass'])){
+		echo 'error with authentication';
 		exit();
 	}
-	/*$groups = $news->get_groups();
 	
-	echo "<table>";
-	foreach ($groups as $group) {
-		echo "<tr><td>".$group['name']."</td></tr>\n";
-	}
-	echo "</table>";*/
 	$group_name = $_GET['gid'];
 	$grupo = $news->open_group($group_name);
-	
-	echo $grupo->get_message_body($_GET['pid']);
-	
+	$headers = $grupo->get_message_info($_GET['pid']);
+	$encoding = 'ISO-8859-1';
+	$ctype = 'plain';
+	if (isset($headers['Content-Type'])){
+		//Content-Type: text/plain; charset=windows-1252; format=flowed
+		preg_match("/text\/(?<type>\w+);\scharset=(?<charset>[\w\-]+);/", $headers['Content-Type'], $matches);
+		$encoding = $matches['charset'];
+		$ctype = $matches['type'];
+		
+	}
+	header('Content-Type', "text/html; charset=$encoding;");
+	//$article = $group->
+	echo pretify_post(htmlentities($grupo->get_message_body($_GET['pid']), ENT_QUOTES, $encoding));
 	
 ?>

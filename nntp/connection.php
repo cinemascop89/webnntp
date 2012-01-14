@@ -11,7 +11,12 @@
 			$this->port = $port;
 			
 			$this->sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-			return socket_connect($this->sock, $this->host, $this->port);			
+			$success = socket_connect($this->sock, $this->host, $this->port);
+			if (!$success){
+				$error = socket_last_error($this->sock);
+				throw new BadMethodCallException(socket_strerror($error), $error);
+			}
+			return true;			
 						
 		}
 		

@@ -3,12 +3,31 @@ body, div, td, hr, li, input, select {
 	font-size: 12px;
 	line-height: 1.2em;
 }
+#wrap{
+	overflow:hidden;
+	height:98%;
+	width:98%;
+	margin:auto;
+	
+}
+#viewer{
+	width:80%;
+	margin-left:2%;
+	height:100%;
+	float:right;
+}
 #messages{
-	height:300px;
+	height:50%;
 	overflow:scroll;
 }
 #post{
 	background-color:#eeeeee;
+	height:50%;
+	overflow:scroll;
+}
+.quote{
+	color:#0A8A12;
+	font-style:italic;
 }
 
 #login{
@@ -26,12 +45,11 @@ input{
 }
 
 #groups{
-	width:100px;
-	height:auto;
+	width:18%;
+	height:100%;
 	overflow:scroll;
 	float:left;
 	display:inline;
-	margin:10px;
 	background-color:#eeeeee;
 }
 
