@@ -25,7 +25,7 @@
 		$ctype = $matches['type'];
 		
 	}
-	header('Content-Type', "text/html; charset=$encoding;");
+	//header('Content-Type', "text/html; charset=$encoding;");
 	//$article = $group->
 	echo pretify_post(htmlentities($grupo->get_message_body($_GET['pid']), ENT_QUOTES, $encoding));
 	

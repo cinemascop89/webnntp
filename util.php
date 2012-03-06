@@ -50,7 +50,7 @@
 				$text = $matches[2];
 			}
 			
-			return htmlentities($text, ENT_QUOTES, $charset);
+			return htmlentities($text, ENT_QUOTES);
 		}else{
 			return $encoded;
 		}
