@@ -44,6 +44,11 @@
 	<div id='viewer'>
 		<div id='messages'>
 			<table>
+				<tr>
+					<th>Author</th>
+					<th>Subject</th>
+					<th>Date</th>
+				</tr>
 <?php 
 	
 		$group = $news->open_group($group_name);
